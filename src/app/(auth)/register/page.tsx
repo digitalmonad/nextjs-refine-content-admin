@@ -1,15 +1,15 @@
-import { AuthPage } from "@components/auth-page";
+import { LoginPage } from "@components/auth/register-form";
 import { authProviderServer } from "@providers/auth-provider";
 import { redirect } from "next/navigation";
 
-export default async function Register() {
+export default async function Login() {
   const data = await getData();
 
   if (data.authenticated) {
     redirect(data?.redirectTo || "/");
   }
 
-  return <AuthPage type="register" />;
+  return <LoginPage type="login" />;
 }
 
 async function getData() {

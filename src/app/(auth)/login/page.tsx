@@ -1,4 +1,4 @@
-import { AuthPage } from "@components/auth-page";
+import { LoginForm } from "@components/auth/login-form";
 import { authProviderServer } from "@providers/auth-provider";
 import { redirect } from "next/navigation";
 
@@ -9,7 +9,7 @@ export default async function Login() {
     redirect(data?.redirectTo || "/");
   }
 
-  return <AuthPage type="login" />;
+  return <LoginForm error={data.error} />;
 }
 
 async function getData() {
