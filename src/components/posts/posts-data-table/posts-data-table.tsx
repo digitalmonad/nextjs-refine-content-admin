@@ -6,10 +6,15 @@ import { ColumnDef, flexRender } from "@tanstack/react-table";
 import React from "react";
 
 import { DataTable } from "@components/ui/data-table/data-table";
+import { DataTablePagination } from "@components/ui/data-table/data-table-pagination";
 import { formatDateSafe } from "@lib/date";
+import { PostsDataTableFilters } from "./posts-data-table-filters";
+
+import { Edit, Eye } from "lucide-react";
+import Link from "next/link";
 
 export default function PostsDataTable() {
-  const { edit, show } = useNavigation();
+  const { editUrl, showUrl } = useNavigation();
 
   const columns = React.useMemo<ColumnDef<any>[]>(
     () => [
@@ -22,6 +27,9 @@ export default function PostsDataTable() {
         id: "title",
         accessorKey: "title",
         header: "Title",
+        meta: {
+          filterOperator: "contains",
+        },
       },
       {
         id: "content",
@@ -74,29 +82,14 @@ export default function PostsDataTable() {
         header: () => <div className="text-right">Actions</div>,
         cell: function render({ getValue }) {
           return (
-            <div
-              className="flex justify-end"
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                gap: "4px",
-              }}
-            >
-              <button
-                onClick={() => {
-                  show("blog_posts", getValue() as string);
-                }}
-              >
-                Show
-              </button>
-              <button
-                onClick={() => {
-                  edit("blog_posts", getValue() as string);
-                }}
-              >
-                Edit
-              </button>
+            <div className="flex justify-end space-x-2">
+              <Link href={showUrl("blog_posts", getValue() as string)}>
+                <Eye className="icon" />
+              </Link>
+
+              <Link href={editUrl("blog_posts", getValue() as string)}>
+                <Edit className="icon" />
+              </Link>
             </div>
           );
         },
@@ -107,6 +100,9 @@ export default function PostsDataTable() {
 
   const table = useTable({
     columns,
+    refineCoreProps: {
+      syncWithLocation: true,
+    },
   });
 
   const {
@@ -132,5 +128,11 @@ export default function PostsDataTable() {
     },
   }));
 
-  return <DataTable {...{ table }} />;
+  return (
+    <div className="flex flex-col space-y-4">
+      <PostsDataTableFilters {...{ table }} />
+      <DataTable {...{ table }} />
+      <DataTablePagination {...{ table }} />
+    </div>
+  );
 }
