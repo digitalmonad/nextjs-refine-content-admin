@@ -1,19 +1,12 @@
 "use client";
 
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableBody,
-  TableCell,
-  TableHead,
-} from "@components/ui/table";
 import { GetManyResponse, useMany, useNavigation } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef, flexRender } from "@tanstack/react-table";
 import React from "react";
-import { DataTablePagination } from "../../ui/data-table/data-table-pagination";
+
 import { DataTable } from "@components/ui/data-table/data-table";
+import { formatDateSafe } from "@lib/date";
 
 export default function PostsDataTable() {
   const { edit, show } = useNavigation();
@@ -72,9 +65,7 @@ export default function PostsDataTable() {
         accessorKey: "createdAt",
         header: "Created At",
         cell: function render({ getValue }) {
-          return new Date(getValue<any>()).toLocaleString(undefined, {
-            timeZone: "UTC",
-          });
+          return formatDateSafe(getValue<any>(), "dd-MM-yyy HH:mm:ss");
         },
       },
       {

@@ -15,7 +15,7 @@ export default function BlogPostList() {
       <div className="flex items-center justify-between">
         <h2 className="text-2xl">{"Blog Posts List"}</h2>
         <Button variant={"outline"} onClick={() => create("blog_posts")}>
-          <PlusIcon className="w-4 h-4" />
+          <PlusIcon className="icon mr-2" />
           {"Create"}
         </Button>
       </div>
