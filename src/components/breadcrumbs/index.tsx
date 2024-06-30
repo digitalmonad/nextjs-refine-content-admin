@@ -10,11 +10,11 @@ import {
   BreadcrumbSeparator,
 } from "@components/ui/breadcrumb";
 import { useBreadcrumb } from "@refinedev/core";
-import { Slash } from "lucide-react";
+
 import Link from "next/link";
 
 export const Breadcrumbs = () => {
-  const { breadcrumbs } = useBreadcrumb();
+  const { breadcrumbs } = useBreadcrumb({});
 
   return (
     <Breadcrumb>

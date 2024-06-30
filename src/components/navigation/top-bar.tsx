@@ -1,5 +1,10 @@
 import { Breadcrumbs } from "../breadcrumbs";
-import { Sheet, SheetContent, SheetTrigger } from "@components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@components/ui/sheet";
 import { Button } from "@components/ui/button";
 import Link from "next/link";
 import { useLogout, useMenu } from "@refinedev/core";
@@ -37,6 +42,7 @@ export const TopBar = () => {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="sm:max-w-xs">
+          <SheetTitle></SheetTitle>
           <nav className="grid gap-6 text-lg font-medium">
             {menuItems.map((item) => {
               const Icon = item.route ? pathIconsMap[item.route] : HomeIcon;
