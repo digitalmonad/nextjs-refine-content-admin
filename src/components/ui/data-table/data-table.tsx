@@ -26,7 +26,12 @@ export function DataTable({ table }: DataTableProps) {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    style={{
+                      width: header.column.columnDef.minSize,
+                    }}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(

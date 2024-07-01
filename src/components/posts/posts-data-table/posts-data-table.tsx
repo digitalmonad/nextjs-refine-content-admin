@@ -2,7 +2,12 @@
 
 import { GetManyResponse, useMany, useNavigation } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
-import { ColumnDef, flexRender } from "@tanstack/react-table";
+import {
+  ColumnDef,
+  filterFns,
+  flexRender,
+  sortingFns,
+} from "@tanstack/react-table";
 import React from "react";
 
 import { DataTable } from "@components/ui/data-table/data-table";
@@ -12,6 +17,12 @@ import { PostsDataTableFilters } from "./posts-data-table-filters";
 
 import { Edit, Eye } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@components/ui/button";
+import {
+  CaretDownIcon,
+  CaretSortIcon,
+  CaretUpIcon,
+} from "@radix-ui/react-icons";
 
 export default function PostsDataTable() {
   const { editUrl, showUrl } = useNavigation();
@@ -21,12 +32,49 @@ export default function PostsDataTable() {
       {
         id: "id",
         accessorKey: "id",
-        header: "ID",
+
+        header: ({ column }) => {
+          const sortingOrder = column.getIsSorted();
+          return (
+            <Link
+              className="flex items-center hover:underline"
+              href={"#"}
+              onClick={() => column.toggleSorting()}
+            >
+              ID
+              {sortingOrder === "asc" ? (
+                <CaretUpIcon className="ml-2 icon" />
+              ) : sortingOrder === "desc" ? (
+                <CaretDownIcon className="ml-2 icon" />
+              ) : (
+                <CaretSortIcon className="ml-2 icon" />
+              )}
+            </Link>
+          );
+        },
       },
       {
         id: "title",
         accessorKey: "title",
-        header: "Title",
+        header: ({ column }) => {
+          const sortingOrder = column.getIsSorted();
+          return (
+            <Link
+              className="flex items-center hover:underline"
+              href={"#"}
+              onClick={() => column.toggleSorting()}
+            >
+              Title
+              {sortingOrder === "asc" ? (
+                <CaretUpIcon className="ml-2 icon" />
+              ) : sortingOrder === "desc" ? (
+                <CaretDownIcon className="ml-2 icon" />
+              ) : (
+                <CaretSortIcon className="ml-2 icon" />
+              )}
+            </Link>
+          );
+        },
         meta: {
           filterOperator: "contains",
         },
@@ -34,7 +82,25 @@ export default function PostsDataTable() {
       {
         id: "content",
         accessorKey: "content",
-        header: "Content",
+        header: ({ column }) => {
+          const sortingOrder = column.getIsSorted();
+          return (
+            <Link
+              className="flex items-center hover:underline"
+              href={"#"}
+              onClick={() => column.toggleSorting()}
+            >
+              Content
+              {sortingOrder === "asc" ? (
+                <CaretUpIcon className="ml-2 icon" />
+              ) : sortingOrder === "desc" ? (
+                <CaretDownIcon className="ml-2 icon" />
+              ) : (
+                <CaretSortIcon className="ml-2 icon" />
+              )}
+            </Link>
+          );
+        },
         cell: function render({ getValue }) {
           return (
             <div className="lowercase truncate overflow-hidden max-w-[300px]">
@@ -45,11 +111,12 @@ export default function PostsDataTable() {
       },
       {
         id: "category",
-        header: "Category",
+        enableSorting: true,
         accessorKey: "category",
         meta: {
           filterOperator: "eq",
         },
+        header: "Category",
         cell: function render({ getValue, table }) {
           const meta = table.options.meta as {
             categoryData: GetManyResponse;
@@ -69,14 +136,52 @@ export default function PostsDataTable() {
       {
         id: "status",
         accessorKey: "status",
-        header: "Status",
+        header: ({ column }) => {
+          const sortingOrder = column.getIsSorted();
+          return (
+            <Link
+              className="flex items-center hover:underline"
+              href={"#"}
+              onClick={() => column.toggleSorting()}
+            >
+              Status
+              {sortingOrder === "asc" ? (
+                <CaretUpIcon className="ml-2 icon" />
+              ) : sortingOrder === "desc" ? (
+                <CaretDownIcon className="ml-2 icon" />
+              ) : (
+                <CaretSortIcon className="ml-2 icon" />
+              )}
+            </Link>
+          );
+        },
       },
       {
         id: "createdAt",
         accessorKey: "createdAt",
-        header: "Created At",
+        enableColumnFilter: true,
+        enableSorting: true,
+        header: ({ column }) => {
+          const sortingOrder = column.getIsSorted();
+          return (
+            <Link
+              className="flex items-center hover:underline"
+              href={"#"}
+              onClick={() => column.toggleSorting()}
+            >
+              Created At
+              {sortingOrder === "asc" ? (
+                <CaretUpIcon className="ml-2 icon" />
+              ) : sortingOrder === "desc" ? (
+                <CaretDownIcon className="ml-2 icon" />
+              ) : (
+                <CaretSortIcon className="ml-2 icon" />
+              )}
+            </Link>
+          );
+        },
         cell: function render({ getValue }) {
-          return formatDateSafe(getValue<any>(), "dd-MM-yyy HH:mm:ss");
+          return formatDateSafe(getValue<any>(), "yyyy-MM-dd HH:mm:ss");
         },
       },
       {
@@ -105,6 +210,11 @@ export default function PostsDataTable() {
     columns,
     refineCoreProps: {
       syncWithLocation: true,
+    },
+    defaultColumn: {
+      size: 60,
+      maxSize: 200,
+      minSize: 200,
     },
   });
 

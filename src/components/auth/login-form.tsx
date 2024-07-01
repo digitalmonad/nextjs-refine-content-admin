@@ -32,7 +32,7 @@ export const LoginForm = (props: any) => {
       password: "",
     },
   });
-  console.log(props.error);
+
   const { mutate } = useLogin();
 
   const onSubmit = async (data: any) => {

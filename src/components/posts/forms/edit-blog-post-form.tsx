@@ -34,7 +34,6 @@ export const EditBlogPostForm = () => {
     resolver: zodResolver(editBlogPostFormSchema),
     refineCoreProps: {
       onMutationSuccess: () => {
-        console.log("onMutationSuccess");
         toast.success("Blog post updated successfully");
       },
     },

@@ -40,7 +40,7 @@ export const ShowBlogPostForm = () => {
       <Label>Created at</Label>
       <Input
         placeholder="Created at"
-        value={formatDateSafe(record?.created_at, "yyyy-MM-dd HH:mm:ss")}
+        value={formatDateSafe(record?.createdAt, "yyyy-MM-dd HH:mm:ss")}
       />
     </div>
   );
