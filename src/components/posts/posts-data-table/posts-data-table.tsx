@@ -47,6 +47,9 @@ export default function PostsDataTable() {
         id: "category",
         header: "Category",
         accessorKey: "category",
+        meta: {
+          filterOperator: "eq",
+        },
         cell: function render({ getValue, table }) {
           const meta = table.options.meta as {
             categoryData: GetManyResponse;

@@ -21,25 +21,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@components/ui/textarea";
-
-const BlogPostStatusSchema = z.enum(["draft", "published", "rejected"]);
-
-const formSchema = z.object({
-  title: z.string().min(2, {
-    message: "Title must be at least 2 characters.",
-  }),
-  content: z.string().min(2, {
-    message: "Title must be at least 2 characters.",
-  }),
-  category: z.object({
-    id: z.number(),
-  }),
-  status: BlogPostStatusSchema,
-});
+import {
+  createBlogPostFormSchema,
+  BlogPostStatusSchema,
+} from "@schemas/blog-post";
 
 export const CreateBlogPostForm = () => {
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(createBlogPostFormSchema),
     defaultValues: {
       status: BlogPostStatusSchema.Values.draft,
       title: "",

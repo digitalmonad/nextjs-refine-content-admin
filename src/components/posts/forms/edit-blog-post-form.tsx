@@ -1,9 +1,9 @@
 import { Button } from "@components/ui/button";
-import { useNavigation, useSelect } from "@refinedev/core";
+import { useSelect } from "@refinedev/core";
 import { Input } from "@components/ui/input";
 import { useForm } from "@refinedev/react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+
 import {
   Form,
   FormControl,
@@ -21,26 +21,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@components/ui/textarea";
-import { title } from "process";
-import React from "react";
-const BlogPostStatusSchema = z.enum(["draft", "published", "rejected"]);
 
-const formSchema = z.object({
-  title: z.string().min(2, {
-    message: "Title must be at least 2 characters.",
-  }),
-  content: z.string().min(2, {
-    message: "Title must be at least 2 characters.",
-  }),
-  category: z.object({
-    id: z.number(),
-  }),
-  status: BlogPostStatusSchema,
-});
+import React from "react";
+import { toast } from "sonner";
+import {
+  BlogPostStatusSchema,
+  editBlogPostFormSchema,
+} from "@schemas/blog-post";
 
 export const EditBlogPostForm = () => {
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(editBlogPostFormSchema),
+    refineCoreProps: {
+      onMutationSuccess: () => {
+        console.log("onMutationSuccess");
+        toast.success("Blog post updated successfully");
+      },
+    },
   });
 
   const blogPostsData = form.refineCore.queryResult?.data?.data;

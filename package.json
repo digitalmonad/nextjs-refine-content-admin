@@ -1,5 +1,5 @@
 {
-  "name": "next-14-refine-blog",
+  "name": "nextjs-refine-content-admin",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^18.16.2",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
