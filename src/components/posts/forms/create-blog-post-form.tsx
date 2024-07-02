@@ -107,7 +107,7 @@ export const CreateBlogPostForm = () => {
                   <SelectContent>
                     {categoryOptions?.map((option) => (
                       <SelectItem value={option.value} key={option.value}>
-                        {option.label}
+                        {option.label ?? "-- No label --"}
                       </SelectItem>
                     ))}
                   </SelectContent>

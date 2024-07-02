@@ -1,38 +1,54 @@
 "use client";
 
-import { GetManyResponse, useMany, useNavigation } from "@refinedev/core";
-import { useTable } from "@refinedev/react-table";
 import {
-  ColumnDef,
-  filterFns,
-  flexRender,
-  sortingFns,
-} from "@tanstack/react-table";
-import React from "react";
+  GetManyResponse,
+  useDelete,
+  useMany,
+  useNavigation,
+} from "@refinedev/core";
+import { useTable } from "@refinedev/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "@components/ui/data-table/data-table";
 import { DataTablePagination } from "@components/ui/data-table/data-table-pagination";
 import { formatDateSafe } from "@lib/date";
 import { PostsDataTableFilters } from "./posts-data-table-filters";
 
-import { Edit, Eye } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+import { Edit, Eye, X } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@components/ui/button";
+import React, { useState } from "react";
 import {
   CaretDownIcon,
   CaretSortIcon,
   CaretUpIcon,
 } from "@radix-ui/react-icons";
+import { toast } from "sonner";
 
 export default function PostsDataTable() {
   const { editUrl, showUrl } = useNavigation();
+
+  const { mutateAsync } = useDelete();
 
   const columns = React.useMemo<ColumnDef<any>[]>(
     () => [
       {
         id: "id",
         accessorKey: "id",
-
+        size: 50,
+        minSize: 50,
+        maxSize: 50,
         header: ({ column }) => {
           const sortingOrder = column.getIsSorted();
           return (
@@ -75,6 +91,18 @@ export default function PostsDataTable() {
             </Link>
           );
         },
+        cell: ({ getValue, cell }) => {
+          return (
+            <div
+              className="truncate overflow-hidden max-w-[200px]"
+              style={{
+                width: cell.column.getSize(),
+              }}
+            >
+              {getValue<string>()}
+            </div>
+          );
+        },
         meta: {
           filterOperator: "contains",
         },
@@ -103,8 +131,8 @@ export default function PostsDataTable() {
         },
         cell: function render({ getValue }) {
           return (
-            <div className="lowercase truncate overflow-hidden max-w-[300px]">
-              {getValue<any>()}
+            <div className="truncate overflow-hidden max-w-[200px]">
+              {getValue<string>()}
             </div>
           );
         },
@@ -124,36 +152,13 @@ export default function PostsDataTable() {
 
           try {
             const category = meta.categoryData?.data?.find(
-              (item) => item.id == getValue<any>()?.id
+              (item) => item.id == getValue<string>()?.id
             );
 
-            return category?.title ?? "Loading...";
+            return category?.title ?? "-- No label --";
           } catch (error) {
             return null;
           }
-        },
-      },
-      {
-        id: "status",
-        accessorKey: "status",
-        header: ({ column }) => {
-          const sortingOrder = column.getIsSorted();
-          return (
-            <Link
-              className="flex items-center hover:underline"
-              href={"#"}
-              onClick={() => column.toggleSorting()}
-            >
-              Status
-              {sortingOrder === "asc" ? (
-                <CaretUpIcon className="ml-2 icon" />
-              ) : sortingOrder === "desc" ? (
-                <CaretDownIcon className="ml-2 icon" />
-              ) : (
-                <CaretSortIcon className="ml-2 icon" />
-              )}
-            </Link>
-          );
         },
       },
       {
@@ -181,23 +186,55 @@ export default function PostsDataTable() {
           );
         },
         cell: function render({ getValue }) {
-          return formatDateSafe(getValue<any>(), "yyyy-MM-dd HH:mm:ss");
+          return formatDateSafe(getValue<string>(), "yyyy-MM-dd HH:mm:ss");
+        },
+      },
+      {
+        id: "status",
+        accessorKey: "status",
+        header: ({ column }) => {
+          const sortingOrder = column.getIsSorted();
+          return (
+            <Link
+              className="flex items-center hover:underline justify-end"
+              href={"#"}
+              onClick={() => column.toggleSorting()}
+            >
+              Status
+              {sortingOrder === "asc" ? (
+                <CaretUpIcon className="ml-2 icon" />
+              ) : sortingOrder === "desc" ? (
+                <CaretDownIcon className="ml-2 icon" />
+              ) : (
+                <CaretSortIcon className="ml-2 icon" />
+              )}
+            </Link>
+          );
+        },
+        cell: function render({ getValue }) {
+          return <div className="flex justify-end">{getValue<string>()}</div>;
         },
       },
       {
         id: "actions",
         accessorKey: "id",
-        header: () => <div className="text-right">Actions</div>,
-        cell: function render({ getValue }) {
+        size: 80,
+        minSize: 80,
+        maxSize: 80,
+        header: ({ header }) => <div className="text-right">Actions</div>,
+        cell: ({ getValue, cell }) => {
           return (
-            <div className="flex justify-end space-x-2">
-              <Link href={showUrl("blog_posts", getValue() as string)}>
-                <Eye className="icon" />
-              </Link>
-
-              <Link href={editUrl("blog_posts", getValue() as string)}>
-                <Edit className="icon" />
-              </Link>
+            <div>
+              <ActionsCell
+                showActionLinkUrl={showUrl("blog_posts", getValue<string>())}
+                editActionLinkUrl={editUrl("blog_posts", getValue<string>())}
+                onDelete={async () =>
+                  await mutateAsync({
+                    resource: "blog_posts",
+                    id: getValue<string>(),
+                  })
+                }
+              />
             </div>
           );
         },
@@ -212,7 +249,7 @@ export default function PostsDataTable() {
       syncWithLocation: true,
     },
     defaultColumn: {
-      size: 60,
+      size: 200,
       maxSize: 200,
       minSize: 200,
     },
@@ -247,5 +284,75 @@ export default function PostsDataTable() {
       <DataTable {...{ table }} />
       <DataTablePagination {...{ table }} />
     </div>
+  );
+}
+
+const ActionsCell = ({
+  showActionLinkUrl,
+  editActionLinkUrl,
+  onDelete,
+  ...props
+}: any) => {
+  const [open, setIsOpen] = useState(false);
+  return (
+    <div className="flex justify-end space-x-2" {...props}>
+      <Link href={showActionLinkUrl}>
+        <Eye className="icon" />
+      </Link>
+
+      <Link href={editActionLinkUrl}>
+        <Edit className="icon" />
+      </Link>
+
+      <AlertDialogDemo
+        open={open}
+        onCancel={() => setIsOpen(false)}
+        onApprove={async () => {
+          try {
+            await onDelete();
+            setIsOpen(false);
+            toast.success("Post deleted successfully");
+          } catch (error) {
+            toast.error("Failed to delete post");
+          }
+        }}
+      >
+        <X className="icon cursor-pointer" onClick={() => setIsOpen(true)} />
+      </AlertDialogDemo>
+    </div>
+  );
+};
+
+export function AlertDialogDemo({
+  children,
+  open,
+  onApprove,
+  onCancel,
+}: {
+  children: React.ReactNode;
+  open: boolean;
+  onApprove: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <AlertDialog open={open}>
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => onCancel()}>
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={() => onApprove()}>
+            Approve
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

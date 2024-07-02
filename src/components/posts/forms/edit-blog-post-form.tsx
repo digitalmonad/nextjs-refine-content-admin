@@ -92,6 +92,13 @@ export const EditBlogPostForm = () => {
             control={form.control}
             name="category.id"
             render={({ field }) => {
+              // Find if there is a matching category option. Since there can be a case of db inconsistency when the category is deleted, but still can exist on Post
+              const matchingOption = categoryOptions?.find(
+                (option) => option.value === field.value
+              );
+
+              console.log(categoryOptions);
+
               return (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
@@ -99,22 +106,36 @@ export const EditBlogPostForm = () => {
                     onValueChange={(value) => {
                       field.onChange(+value);
                     }}
+                    key={field.value}
                     value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select blog post category" />
+                        {matchingOption ? (
+                          <SelectValue
+                            placeholder="Select blog post category"
+                            key={matchingOption.value}
+                          >
+                            {matchingOption.label}
+                          </SelectValue>
+                        ) : (
+                          <SelectValue
+                            placeholder="Select blog post category"
+                            key="error"
+                          >
+                            No matching category found
+                          </SelectValue>
+                        )}
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {categoryOptions?.map((option) => (
                         <SelectItem value={option.value} key={option.value}>
-                          {option.label}
+                          {option.label ?? "-- No label --"}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-
                   <FormMessage />
                 </FormItem>
               );
@@ -126,7 +147,11 @@ export const EditBlogPostForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select
+                  key={field.value}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue />

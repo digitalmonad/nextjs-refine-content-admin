@@ -32,6 +32,7 @@ export const PostsDataTableFilters = ({
           type="search"
           placeholder="Search title..."
           className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+          defaultValue={table.getColumn("title")?.getFilterValue() as string}
           onChange={debounce((e) => {
             if (e.target.value.length < 1) {
               table.resetPagination();
