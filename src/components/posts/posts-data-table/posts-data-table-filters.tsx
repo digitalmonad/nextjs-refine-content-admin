@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@components/ui/select";
-import { useTable } from "@refinedev/react-table";
+import { UseTableReturnType, useTable } from "@refinedev/react-table";
 import { BlogPostStatusSchema } from "@schemas/blog-post";
 import debounce from "lodash.debounce";
 
@@ -22,7 +22,7 @@ import { ChevronDownIcon, Search } from "lucide-react";
 export const PostsDataTableFilters = ({
   table,
 }: {
-  table: ReturnType<typeof useTable>;
+  table: UseTableReturnType<any>;
 }) => {
   return (
     <div className="flex items-center justify-between">

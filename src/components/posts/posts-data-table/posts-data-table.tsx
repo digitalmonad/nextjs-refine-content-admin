@@ -152,7 +152,7 @@ export default function PostsDataTable() {
 
           try {
             const category = meta.categoryData?.data?.find(
-              (item) => item.id == getValue<string>()?.id
+              (item) => item.id == getValue<any>()?.id
             );
 
             return category?.title ?? "-- No label --";
