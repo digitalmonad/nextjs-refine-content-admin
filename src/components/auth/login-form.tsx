@@ -61,7 +61,11 @@ export const LoginForm = (props: any) => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="email" {...field} />
+                    <Input
+                      placeholder="email"
+                      {...field}
+                      data-test="login-input-email"
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.
@@ -85,7 +89,11 @@ export const LoginForm = (props: any) => {
                     </Link>
                   </div>
                   <FormControl>
-                    <Input placeholder="*****" {...field} />
+                    <Input
+                      placeholder="*****"
+                      {...field}
+                      data-test="login-input-password"
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your public display name.

@@ -1,5 +1,6 @@
 describe("template spec", () => {
   it("passes", () => {
-    cy.visit("http://localhost:3000");
+    cy.visit("/");
+    cy.get('[data-test="login-input-email"]').type("test@email.com");
   });
 });
