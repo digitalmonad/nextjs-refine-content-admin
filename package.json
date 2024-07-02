@@ -10,7 +10,9 @@
     "build": "refine build",
     "start": "refine start",
     "lint": "next lint",
-    "refine": "refine"
+    "refine": "refine",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
@@ -58,6 +60,7 @@
     "@typescript-eslint/parser": "^6.21.0",
     "autoprefixer": "^10.4.19",
     "cross-env": "^7.0.3",
+    "cypress": "^13.13.0",
     "eslint": "^8",
     "eslint-config-next": "^14.1.0",
     "postcss": "^8.4.38",
