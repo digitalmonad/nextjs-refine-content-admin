@@ -24,22 +24,39 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { useForm } from "@refinedev/react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+
+const loginSchema = z.object({
+  email: z.string().email({ message: "Invalid email address format" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long" }),
+});
 
 export const LoginForm = (props: any) => {
   const form = useForm({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
+    mode: "onBlur",
+    reValidateMode: "onSubmit",
   });
 
-  const { mutate } = useLogin();
+  const { mutateAsync } = useLogin();
 
   const onSubmit = async (data: any) => {
     try {
-      await mutate(data);
+      await mutateAsync(data);
+      toast.success("Login successful", {
+        id: "login-success",
+        dismissible: true,
+      });
     } catch (error) {
-      console.error(error);
+      toast.error("Invalid username or password");
     }
   };
 
@@ -67,9 +84,6 @@ export const LoginForm = (props: any) => {
                       data-test="login-input-email"
                     />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -90,19 +104,17 @@ export const LoginForm = (props: any) => {
                   </div>
                   <FormControl>
                     <Input
-                      placeholder="*****"
+                      type="password"
+                      placeholder="******"
                       {...field}
                       data-test="login-input-password"
                     />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" data-test="login-submit">
               Submit
             </Button>
           </form>

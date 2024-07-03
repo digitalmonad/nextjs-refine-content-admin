@@ -12,7 +12,7 @@
     "lint": "next lint",
     "refine": "refine",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run --browser chrome"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",

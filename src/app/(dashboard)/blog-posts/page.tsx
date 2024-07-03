@@ -11,7 +11,7 @@ export default function BlogPostList() {
   const { create } = useNavigation();
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-4" data-test="blog-posts-page">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl">{"Blog Posts List"}</h2>
         <Button variant={"outline"} onClick={() => create("blog_posts")}>

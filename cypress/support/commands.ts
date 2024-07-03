@@ -35,3 +35,22 @@
 //     }
 //   }
 // }
+
+import users from "../fixtures/users.json";
+
+Cypress.Commands.add("login", (email, password) => {
+  cy.session("authenticated", () => {
+    cy.visit("/login");
+    cy.get('[data-test="login-input-email"]').type(email);
+    cy.get('[data-test="login-input-password"]').type(password);
+    cy.get('[data-test="login-submit"]').click();
+    cy.get("[data-sonner-toast]")
+      .invoke("text")
+      .should("match", /success/i);
+    cy.get('[data-test="blog-posts-page"]').should("exist");
+  });
+});
+
+Cypress.Commands.add("loginAsAdmin", () => {
+  cy.login(users.admin.email, users.admin.password);
+});
