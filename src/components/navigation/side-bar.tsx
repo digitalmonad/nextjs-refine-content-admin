@@ -18,7 +18,10 @@ export const SideBar = () => {
   const { menuItems, selectedKey } = useMenu();
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex justify-between">
+    <aside
+      className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex justify-between"
+      data-test="sidebar-navigation"
+    >
       <nav className="flex flex-1 flex-col items-center gap-2 py-4">
         {menuItems.map((item) => {
           const Icon = item.route ? pathIconsMap[item.route] : HomeIcon;
