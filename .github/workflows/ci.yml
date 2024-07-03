@@ -65,26 +65,28 @@ jobs:
         with:
           node-version: "20"
 
+      # PNPM specific configuration from here down
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      - name: Cache PNPM store
+      - name: Cache PNPM store and Next.js build output
         uses: actions/cache@v4
         id: pnpm-cache
         with:
-          path: ~/.pnpm-store
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          path: |
+            ~/.pnpm-store
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
           restore-keys: |
-            pnpm-store-${{ runner.os }}-
+            ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}-
 
         # Installs npm dependencies, builds, runs the web server and test suites
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          # PNPM specific configuration
-          cache-key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          cache-key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
           install: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
           build: ${{ steps.detect-package-manager.outputs.runner }} build
           start: ${{ steps.detect-package-manager.outputs.runner }} start
