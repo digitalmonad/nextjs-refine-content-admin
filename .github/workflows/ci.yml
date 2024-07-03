@@ -32,7 +32,7 @@ concurrency:
 
 jobs:
   # Build job
-  build:
+  build-and-e2e-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -71,7 +71,7 @@ jobs:
           version: 9
 
       - name: Cache PNPM store
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: pnpm-cache
         with:
           path: ~/.pnpm-store
@@ -83,6 +83,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
+          # PNPM specific configuration
           cache-key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           install: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
           build: ${{ steps.detect-package-manager.outputs.runner }} build
