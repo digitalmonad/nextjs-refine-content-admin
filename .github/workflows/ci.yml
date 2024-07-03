@@ -60,21 +60,37 @@ jobs:
             exit 1
           fi
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Cache PNPM store
+        uses: actions/cache@v3
+        id: pnpm-cache
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-store-${{ runner.os }}-
+
         # Installs npm dependencies, builds, runs the web server and test suites
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
+          cache-key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           install: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
           build: ${{ steps.detect-package-manager.outputs.runner }} build
           start: ${{ steps.detect-package-manager.outputs.runner }} start
           browser: chrome
           wait-on: "http://localhost:3000"
+          record: false
+          publish-summary: true
+          component: false
+        env:
+          PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
