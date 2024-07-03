@@ -28,7 +28,7 @@ export default function RootLayout({
       <body>
         <Suspense>
           <RefineKbarProvider>
-            <DevtoolsProvider>
+            {/* <DevtoolsProvider> */}
               <ThemeProvider>
                 <ToastProvider>
                   <TooltipProvider>
@@ -72,7 +72,7 @@ export default function RootLayout({
                   </TooltipProvider>
                 </ToastProvider>
               </ThemeProvider>
-            </DevtoolsProvider>
+            {/* </DevtoolsProvider> */}
           </RefineKbarProvider>
         </Suspense>
       </body>

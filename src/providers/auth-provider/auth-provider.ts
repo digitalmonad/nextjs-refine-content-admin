@@ -7,12 +7,14 @@ const mockUsers = [
   {
     name: "John Doe",
     email: "johndoe@mail.com",
+    password: "johndoe123",
     roles: ["admin"],
     avatar: "https://i.pravatar.cc/150?img=1",
   },
   {
     name: "Jane Doe",
     email: "janedoe@mail.com",
+    password: "janedoe123",
     roles: ["editor"],
     avatar: "https://i.pravatar.cc/150?img=1",
   },
@@ -21,7 +23,15 @@ const mockUsers = [
 export const authProvider: AuthProvider = {
   login: async ({ email, username, password, remember }) => {
     // Suppose we actually send a request to the back end here.
-    const user = mockUsers[0];
+
+    const user = mockUsers.find((user) => {
+      console.log(user);
+      console.log(email);
+      console.log(user.email);
+      console.log(password);
+      console.log(user.password);
+      return user.email === email && password === user.password;
+    });
 
     if (user) {
       Cookies.set("auth", JSON.stringify(user), {
@@ -34,13 +44,7 @@ export const authProvider: AuthProvider = {
       };
     }
 
-    return {
-      success: false,
-      error: {
-        name: "LoginError",
-        message: "Invalid username or password",
-      },
-    };
+    throw new Error("Invalid username or password");
   },
   logout: async () => {
     Cookies.remove("auth", { path: "/" });
