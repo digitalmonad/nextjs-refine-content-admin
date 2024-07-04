@@ -11,9 +11,9 @@ export default function CategoryList() {
   const { create } = useNavigation();
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-4" data-test="categories-page">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl">{"Blog Posts List"}</h2>
+        <h2 className="text-2xl">Categories List</h2>
         <Button variant={"outline"} onClick={() => create("categories")}>
           <PlusIcon className="w-4 h-4" />
           {"Create"}

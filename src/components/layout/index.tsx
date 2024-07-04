@@ -10,9 +10,8 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <SideBar />
         <div className="content space-y-4">
-          <div className="px-4 sm:px-8">
-            <TopBar />
-          </div>
+          <TopBar />
+
           <div className="px-4 sm:px-8">{children}</div>
         </div>
       </div>
