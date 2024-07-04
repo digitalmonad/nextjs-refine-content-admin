@@ -17,7 +17,7 @@ export const Breadcrumbs = () => {
   const { breadcrumbs } = useBreadcrumb({});
 
   return (
-    <Breadcrumb>
+    <Breadcrumb data-test="breadcrumbs">
       <BreadcrumbList>
         {breadcrumbs.map((breadcrumb) => {
           return (

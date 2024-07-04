@@ -35,17 +35,26 @@ export const TopBar = () => {
   const { menuItems, selectedKey } = useMenu();
   return (
     <header
-      className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background sm:static sm:h-auto sm:border-0 sm:bg-transparent"
+      className="sticky top-0 px-4 sm:px-8 z-30 flex h-14 items-center gap-4 border-b bg-background sm:static sm:h-auto sm:border-0 sm:bg-transparent"
       data-test="topbar-navigation"
     >
       <Sheet>
         <SheetTrigger asChild>
-          <Button size="icon" variant="outline" className="sm:hidden">
+          <Button
+            size="icon"
+            variant="outline"
+            className="sm:hidden"
+            data-test="toggle-menu-button"
+          >
             <PanelLeft className="h-5 w-5" />
             <span className="sr-only">Toggle Menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="sm:max-w-xs">
+        <SheetContent
+          side="left"
+          className="sm:max-w-xs"
+          data-test="mobile-toggle-navigation-menu"
+        >
           <SheetTitle></SheetTitle>
           <nav className="grid gap-6 text-lg font-medium">
             {menuItems.map((item) => {
